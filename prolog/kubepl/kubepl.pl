@@ -355,8 +355,11 @@ build_url(Config, Entity, EntityConfig, Params, URL) :-
     atomic_list_concat([URL1,Entity], '/', URL2),
     add_entity_property(URL2, EntityConfig, name, URL3),
     add_entity_property(URL3, EntityConfig, suffix, URL4),
-    uri_query_components(Query, Params),
-    atomic_list_concat([URL4,'?',Query], URL),
+    (   Params \= []
+    ->  uri_query_components(Query, Params),
+        atomic_list_concat([URL4,'?',Query], URL)
+    ;   URL = URL4
+    ),
     debug(kubepl, 'URL ~w', [URL]).
 
 add_version(Config, URL) :-
